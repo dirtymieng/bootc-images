@@ -1,0 +1,27 @@
+FROM ghcr.io/dirtymieng/bootc-base:latest
+
+# Desktop environment
+RUN dnf install -y \
+    @kde-desktop-environment \
+    && systemctl enable sddm \
+    && dnf clean all
+
+# Gaming packages
+RUN dnf install -y \
+    steam \
+    lutris \
+    gamemode \
+    mangohud \
+    wine \
+    && dnf clean all
+
+# GPU drivers (AMD - Mesa Vulkan)
+RUN dnf install -y \
+    mesa-vulkan-drivers \
+    mesa-va-drivers \
+    && dnf clean all
+
+# Controller support
+RUN dnf install -y \
+    game-devices-udev \
+    && dnf clean all

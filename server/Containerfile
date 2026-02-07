@@ -1,0 +1,23 @@
+FROM ghcr.io/dirtymieng/bootc-base:latest
+
+# Server packages
+RUN dnf install -y \
+    # Virtualization
+    qemu-kvm libvirt virt-install \
+    # Containers
+    podman cockpit cockpit-machines cockpit-podman cockpit-storaged \
+    distrobox \
+    # Storage tools
+    fuse fuse3 smartmontools hdparm snapraid duperemove \
+    # Samba
+    samba \
+    # Backup
+    restic rclone \
+    && systemctl enable libvirtd cockpit.socket smartd smb \
+    && dnf clean all
+
+# Install mergerfs from GitHub
+RUN dnf install -y jq && \
+    RPM_URL=$(curl -s https://api.github.com/repos/trapexit/mergerfs/releases/latest | jq -r '.assets[] | select(.name | test("fc43.x86_64.rpm$")) | .browser_download_url') && \
+    dnf install -y "${RPM_URL}" && \
+    dnf remove -y jq && dnf clean all

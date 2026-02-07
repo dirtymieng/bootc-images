@@ -1,0 +1,18 @@
+FROM quay.io/fedora/fedora-bootc:43
+
+# Base packages - common across all images
+RUN dnf install -y \
+    # Hardware
+    pciutils usbutils \
+    # Utilities
+    vim tmux btop zsh stow man-db git curl wget \
+    && dnf clean all
+
+# Create user with SSH key and initial password
+RUN useradd -m -G wheel dirtymieng && \
+    echo 'dirtymieng:changeme' | chpasswd && \
+    mkdir -p /home/dirtymieng/.ssh && \
+    echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPc84Bo01ZkVHxZiUlqlTbP8NwjWD5Dn5Wl+PvJeXJn7 dirtymieng@btw' > /home/dirtymieng/.ssh/authorized_keys && \
+    chmod 700 /home/dirtymieng/.ssh && \
+    chmod 600 /home/dirtymieng/.ssh/authorized_keys && \
+    chown -R dirtymieng:dirtymieng /home/dirtymieng/.ssh

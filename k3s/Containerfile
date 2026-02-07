@@ -1,0 +1,12 @@
+FROM ghcr.io/dirtymieng/bootc-base:latest
+
+# K3s lightweight Kubernetes
+RUN curl -sfL https://get.k3s.io | INSTALL_K3S_SKIP_START=true INSTALL_K3S_SKIP_ENABLE=true sh -
+
+# Container tools
+RUN dnf install -y \
+    podman \
+    && dnf clean all
+
+# K3s will be enabled/started post-install
+# sudo systemctl enable --now k3s
