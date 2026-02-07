@@ -20,9 +20,11 @@ sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
 sudo chown $(id -u):$(id -g) ~/.kube/config
 
 # Install Cilium CNI (required - k3s has no default CNI)
+# These paths are required for bootc's read-only /opt
 cilium install \
   --set cni.binPath=/var/lib/rancher/k3s/data/current/bin \
-  --set cni.confPath=/var/lib/rancher/k3s/agent/etc/cni/net.d
+  --set cni.confFileMountPath=/var/lib/rancher/k3s/agent/etc/cni/net.d \
+  --set cni.hostConfDirMountPath=/var/lib/rancher/k3s/agent/etc/cni/net.d
 
 # Verify
 cilium status
