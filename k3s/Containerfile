@@ -25,6 +25,9 @@ RUN dnf install -y \
     podman \
     && dnf clean all
 
+# Set KUBECONFIG for user
+RUN echo 'export KUBECONFIG=~/.kube/config' >> /home/dirtymieng/.bashrc
+
 # k3s not auto-enabled - start manually, then install Cilium:
 # sudo systemctl enable --now k3s
 # cilium install

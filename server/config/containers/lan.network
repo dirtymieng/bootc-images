@@ -1,0 +1,10 @@
+[Unit]
+Description=lan network
+
+[Network]
+NetworkName=lan
+Driver=macvlan
+Options=parent=br0
+IPAMDriver=host-local
+Subnet=10.0.0.0/24
+Gateway=10.0.0.1

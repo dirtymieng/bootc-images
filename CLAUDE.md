@@ -5,10 +5,19 @@ Layered bootc images for personal infrastructure.
 ## Structure
 
 ```
-base/      → Common packages, user setup
-server/    → FROM base, NAS/server (mergerfs, samba, containers)
-k3s/       → FROM base, lightweight Kubernetes
-gaming/    → FROM base, KDE desktop + Steam/gaming
+base/                    → Common packages, user setup
+server/
+  Containerfile          → FROM base, NAS/server packages
+  config/                → Quadlets, systemd units, samba, etc.
+  deploy-config.sh       → Deploy config to /etc
+k3s/
+  Containerfile          → FROM base, k3s + Cilium CLI
+  config/                → K8s manifests
+gaming/
+  Containerfile          → FROM base, KDE + Steam/gaming
+  config/                → Gaming configs
+scripts/
+  build-all.sh           → Build all images
 ```
 
 ## Build
@@ -33,7 +42,13 @@ podman build -t bootc-server:latest server/
 
 ## Updating
 
+**Image changes (packages):**
 1. Modify Containerfile
 2. Rebuild: `./scripts/build-all.sh`
 3. Push: `PUSH=true ./scripts/build-all.sh`
-4. On target: `sudo bootc upgrade`
+4. On target: `sudo bootc upgrade && reboot`
+
+**Config changes:**
+1. Modify files in `<variant>/config/`
+2. On target: `git pull && sudo ./deploy-config.sh`
+3. Restart affected services
