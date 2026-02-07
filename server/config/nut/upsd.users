@@ -1,0 +1,11 @@
+# Network UPS Tools - upsd users
+# See: man upsd.users
+
+[admin]
+    password = changeme
+    actions = SET
+    instcmds = ALL
+
+[upsmon]
+    password = changeme
+    upsmon master

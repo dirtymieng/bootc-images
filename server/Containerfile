@@ -13,8 +13,18 @@ RUN dnf install -y \
     samba \
     # Backup
     restic rclone \
-    && systemctl enable libvirtd cockpit.socket smartd smb \
+    # Firewall
+    firewalld \
+    # UPS monitoring
+    nut \
+    && systemctl enable libvirtd cockpit.socket smartd smb firewalld \
     && dnf clean all
+
+# Install Tailscale
+RUN curl -fsSL https://pkgs.tailscale.com/stable/fedora/tailscale.repo -o /etc/yum.repos.d/tailscale.repo && \
+    dnf install -y tailscale && \
+    systemctl enable tailscaled && \
+    dnf clean all
 
 # Install mergerfs from GitHub
 RUN dnf install -y jq && \

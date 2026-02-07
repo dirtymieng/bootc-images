@@ -41,6 +41,29 @@ if [ -f "${CONFIG_DIR}/samba/smb.conf" ]; then
     sudo cp ${CONFIG_DIR}/samba/smb.conf /etc/samba/smb.conf
 fi
 
+# Deploy firewalld config
+if [ -d "${CONFIG_DIR}/firewalld" ] && [ "$(ls -A ${CONFIG_DIR}/firewalld)" ]; then
+    echo "Deploying firewalld configuration..."
+    sudo cp -r ${CONFIG_DIR}/firewalld/* /etc/firewalld/
+    sudo firewall-cmd --reload 2>/dev/null || true
+fi
+
+# SELinux: Allow Samba to share FUSE filesystems (mergerfs)
+# This is required for Samba to access mergerfs mounts
+if command -v setsebool &>/dev/null; then
+    echo "Configuring SELinux for Samba + FUSE..."
+    sudo setsebool -P samba_share_fusefs on 2>/dev/null || true
+fi
+
+# Deploy NUT (UPS) config
+if [ -d "${CONFIG_DIR}/nut" ] && [ "$(ls -A ${CONFIG_DIR}/nut)" ]; then
+    echo "Deploying NUT (UPS) configuration..."
+    sudo mkdir -p /etc/ups
+    sudo cp ${CONFIG_DIR}/nut/* /etc/ups/
+    sudo chmod 640 /etc/ups/*.conf /etc/ups/upsd.users
+    sudo chown root:nut /etc/ups/*.conf /etc/ups/upsd.users 2>/dev/null || true
+fi
+
 # Deploy SSH keys
 if [ -f "${CONFIG_DIR}/ssh/authorized_keys" ]; then
     echo "Deploying SSH authorized keys..."
@@ -78,6 +101,7 @@ echo "1. Review deployed files:"
 echo "   - /etc/systemd/system (systemd units)"
 echo "   - /etc/containers/systemd (quadlets)"
 echo "   - /etc/NetworkManager/system-connections (network config)"
+echo "   - /etc/firewalld/zones (firewall config)"
 echo "   - /var/lib/media_conf (app configs)"
 echo "2. Enable and start your mount units:"
 echo "   sudo systemctl enable --now mnt-disk1.mount"
@@ -87,4 +111,8 @@ echo "3. Enable snapraid timer if configured:"
 echo "   sudo systemctl enable --now snapraid-sync.timer"
 echo "4. Start container services:"
 echo "   sudo systemctl enable --now caddy jellyfin frigate ..."
-echo "5. Check status with: systemctl status"
+echo "5. If using Tailscale, set it up:"
+echo "   sudo tailscale up"
+echo "6. If using NUT (UPS), edit /etc/ups/ configs then:"
+echo "   sudo systemctl enable --now nut-server nut-monitor"
+echo "7. Check status with: systemctl status"
