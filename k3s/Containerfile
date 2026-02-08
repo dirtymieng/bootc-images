@@ -11,7 +11,7 @@ RUN curl -sfL https://get.k3s.io | \
     INSTALL_K3S_SKIP_ENABLE=true \
     INSTALL_K3S_SKIP_SELINUX_RPM=true \
     INSTALL_K3S_SELINUX_WARN=true \
-    INSTALL_K3S_EXEC="--flannel-backend=none --disable-network-policy" \
+    INSTALL_K3S_EXEC="--flannel-backend=none --disable-network-policy --disable=traefik" \
     sh -
 
 # Cilium CLI
