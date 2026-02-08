@@ -27,16 +27,18 @@ mkdir -p ~/.kube
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
 sudo chown $(id -u):$(id -g) ~/.kube/config
 
-# Install Cilium CNI (required - k3s has no default CNI)
-cilium install
+# Install Cilium CNI with Gateway API and LB IPAM
+cilium install \
+  --set kubeProxyReplacement=true \
+  --set gatewayAPI.enabled=true \
+  --set l2announcements.enabled=true \
+  --set externalIPs.enabled=true
 
 # Verify
 cilium status
 kubectl get nodes
-```
 
-## Applying Manifests
-
-```bash
+# Apply manifests (LB IP pool, L2 announcements, etc.)
+# Edit manifests/cilium-lb-ipam.yaml to set your IP range first!
 kubectl apply -f manifests/
 ```
