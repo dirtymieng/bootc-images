@@ -20,6 +20,9 @@ RUN CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium
     tar xzvf cilium-linux-amd64.tar.gz -C /usr/local/bin && \
     rm cilium-linux-amd64.tar.gz
 
+# Create CNI directory structure (mount point for tmpfs - see opt-cni-bin.mount)
+RUN mkdir -p /opt/cni/bin
+
 # Set KUBECONFIG for user
 RUN echo 'export KUBECONFIG=~/.kube/config' >> /home/dirtymieng/.bashrc
 
