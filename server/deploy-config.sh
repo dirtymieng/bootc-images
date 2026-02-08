@@ -20,11 +20,11 @@ if [ -d "${CONFIG_DIR}/systemd" ] && [ "$(ls -A ${CONFIG_DIR}/systemd)" ]; then
     sudo systemctl daemon-reload
 fi
 
-# Deploy quadlets
-if [ -d "${CONFIG_DIR}/containers" ] && [ "$(ls -A ${CONFIG_DIR}/containers)" ]; then
+# Deploy quadlets (skip disabled folder)
+if [ -d "${CONFIG_DIR}/containers" ]; then
     echo "Deploying container quadlets..."
     sudo mkdir -p /etc/containers/systemd
-    sudo cp -r ${CONFIG_DIR}/containers/* /etc/containers/systemd/
+    find ${CONFIG_DIR}/containers -maxdepth 1 -type f \( -name "*.container" -o -name "*.network" -o -name "*.volume" \) -exec sudo cp {} /etc/containers/systemd/ \;
     sudo systemctl daemon-reload
 fi
 
