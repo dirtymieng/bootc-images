@@ -20,11 +20,6 @@ RUN CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium
     tar xzvf cilium-linux-amd64.tar.gz -C /usr/local/bin && \
     rm cilium-linux-amd64.tar.gz
 
-# Container tools
-RUN dnf install -y \
-    podman \
-    && dnf clean all
-
 # Set KUBECONFIG for user
 RUN echo 'export KUBECONFIG=~/.kube/config' >> /home/dirtymieng/.bashrc
 

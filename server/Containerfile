@@ -4,8 +4,8 @@ FROM ghcr.io/dirtymieng/bootc-base:latest
 RUN dnf install -y \
     # Virtualization
     qemu-kvm libvirt virt-install \
-    # Containers
-    podman cockpit cockpit-machines cockpit-podman cockpit-storaged \
+    # Containers/Cockpit
+    cockpit cockpit-machines cockpit-podman cockpit-storaged \
     distrobox \
     # Storage tools
     fuse fuse3 smartmontools hdparm snapraid duperemove \
