@@ -6,4 +6,5 @@
   <service name="dhcpv6-client"/>
   <service name="cockpit"/>
   <service name="samba"/>
+  <service name="mdns"/>
 </zone>

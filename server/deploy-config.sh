@@ -64,6 +64,13 @@ if [ -d "${CONFIG_DIR}/nut" ] && [ "$(ls -A ${CONFIG_DIR}/nut)" ]; then
     sudo chown root:nut /etc/ups/*.conf /etc/ups/upsd.users 2>/dev/null || true
 fi
 
+# Deploy Avahi config
+if [ -f "${CONFIG_DIR}/avahi/avahi-daemon.conf" ]; then
+    echo "Deploying Avahi configuration..."
+    sudo cp ${CONFIG_DIR}/avahi/avahi-daemon.conf /etc/avahi/
+    sudo systemctl restart avahi-daemon 2>/dev/null || true
+fi
+
 # Deploy SSH keys
 if [ -f "${CONFIG_DIR}/ssh/authorized_keys" ]; then
     echo "Deploying SSH authorized keys..."
