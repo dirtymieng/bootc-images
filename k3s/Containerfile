@@ -20,9 +20,6 @@ RUN CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium
     tar xzvf cilium-linux-amd64.tar.gz -C /usr/local/bin && \
     rm cilium-linux-amd64.tar.gz
 
-# Create CNI directory for Cilium (required since /opt is read-only at runtime)
-RUN mkdir -p /opt/cni/bin
-
 # Container tools
 RUN dnf install -y \
     podman \
